@@ -1,14 +1,23 @@
 const express = require('express')
 const app = express()
 
+const dotenv = require('dotenv')
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 ///requiring routes
 const baseRoute = require('./routes/baseRoute')
 const todoRoute = require('./routes/todoRoute')
 
+///enable cors
+app.use(cors())
+
+///configuring dotenv
+dotenv.config()
+const env = process.env
+
 ///MongoDB config
-const URI = `mongodb+srv://sinisterMongo:sinister@cluster0.wiiar.mongodb.net/todo-master?retryWrites=true&w=majority`
+const URI = `mongodb+srv://${env.USER}:${env.PASSWORD}@cluster0.wiiar.mongodb.net/${env.DATABASE}?retryWrites=true&w=majority`
 
 ///middlewares
 app.use(express.json())
@@ -17,23 +26,10 @@ app.use(express.json())
 app.use(baseRoute)
 app.use(todoRoute)
 
-
-///server listening
-// mongoose.connect(URI, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// }).then(() => {
-//     console.log("DB connected");
-//     app.listen(3000, () => {
-//         console.log("Server is listening !!!");
-//     })
-// }).catch(err => {
-//     console.log(err.message);
-// })
-
 mongoose.connect(URI, { useUnifiedTopology: true, useNewUrlParser: true }).
     then(result => {
         app.listen(process.env.PORT || 3000, (req, res) => {
+            console.log("DB connected");
             console.log("Server is listening !!!");
         })
     }).catch(err => {
