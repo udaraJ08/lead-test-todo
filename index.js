@@ -1,7 +1,7 @@
 const express = require('express')
-const mongoose = require('mongoose')
-
 const app = express()
+
+const mongoose = require('mongoose')
 
 ///requiring routes
 const baseRoute = require('./routes/baseRoute')
